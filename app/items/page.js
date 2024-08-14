@@ -31,10 +31,11 @@ export default function Items() {
     const [category, setCategory] = useState('');
     const [cost, setCost] = useState('');
     const [count, setCount] = useState('');
-
+    const [itemId, setItemId] = useState('');
     const addItem = async () => {
         console.log(itemName, group, cal, category, cost, count);
         const docRef = await addDoc(collection(db, "FoodinvData"), {
+            id: itemId,
             name: itemName,
             group: group,
             cal: cal,
@@ -44,6 +45,7 @@ export default function Items() {
 
           });
         setItems([...items, {
+            id: docRef.id,
             name: itemName,
             group: group,
             cal: cal,
@@ -57,6 +59,7 @@ export default function Items() {
         setCategory('');
         setCost('');
         setCount('');
+        setItemId('');
     }
 
 
@@ -64,10 +67,17 @@ export default function Items() {
         const getItems = async () => {
          const q = query(collection(db, "FoodinvData"));
          const results = await getDocs(q);
-         //console.log(results);
-          results.forEach((doc) => {
+         
+         const itemsList = results.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+         //console.log(itemsList);
+         results.forEach((doc) => {
+            console.log(doc.data());
             // doc.data() is never undefined for query doc snapshots
-             setItems((prev)=>[...prev,doc.data()]);
+            // setItems((prev)=>[...prev,doc.data()]);
+            setItems(itemsList);
            });
         }
         getItems();
@@ -75,7 +85,7 @@ export default function Items() {
     
     },[])
 
-    const deleteItem = async (itemName) => {
+    const deleteItem = async (items) => {
         try{
             try{await deleteDoc(doc(db, "FoodinvData", itemName));}
             catch{
@@ -170,7 +180,7 @@ export default function Items() {
                                 <TableCell>{item.category}</TableCell>
                                 <TableCell>${item.cost}</TableCell>
                                 <TableCell>{item.count}</TableCell>
-                                <Button variant="destructive" onClick={()=>deleteItem(item.name)}><LucideTrash className='text-[10px]'/></Button>
+                                {/* <Button variant="destructive" onClick={()=>deleteItem(item.name)}><LucideTrash className='text-[10px]'/></Button> */}
                             </TableRow>
                         ))}
                     </TableBody>

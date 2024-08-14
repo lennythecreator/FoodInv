@@ -32,8 +32,8 @@ export default function Home() {
         <Header/>
         
         <section>
-            <h1 className="text-4xl font-bold my-5"> What's in the box?</h1>
-            <p>Let's add some items </p>
+            <h1 className="text-4xl font-bold my-5"> What&apos;s in the box?</h1>
+            <p>Let&apos;s add some items </p>
             <Button ><Link className='flex flex-row items-center gap-2' href='/items'><LucidePlus/> Add Items</Link></Button>
             <div className='flex gap-4 my-2'>
               {
